@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taskify/counter/counter.dart';
+import 'package:taskify/features/auth/presentation/login_screen.dart';
 import 'package:taskify/l10n/l10n.dart';
 
 class App extends StatelessWidget {
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const LoginScreen(),
     );
   }
 }
