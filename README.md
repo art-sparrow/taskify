@@ -55,6 +55,14 @@ Doctor summary (to see all details, run flutter doctor -v):
 
 ---
 
+## Firebase App Distribution
+
+The `prod` and `dev` workflows will generate this CI/CD app testing invitation on every PR:
+
+![Image](https://github.com/user-attachments/assets/bc11e835-34c4-42f6-b0f8-caf8986882ea)
+
+---
+
 ## Running Tests 🧪
 
 To run all unit and widget tests use the following command:
