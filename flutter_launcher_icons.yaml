@@ -1,0 +1,6 @@
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/taskify_logo.png"
+  adaptive_icon_background: "#ff6200"
+  adaptive_icon_foreground: "assets/icons/taskify_logo.png"
