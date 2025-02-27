@@ -3,9 +3,7 @@ name: Generate Dev APK
 on:      
   pull_request:
     branches:
-      - main
-      - develop
-      - refactor/auth
+      - master
 
 jobs:
   build:
