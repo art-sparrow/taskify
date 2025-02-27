@@ -1,0 +1,28 @@
+name: taskify
+
+# Prevents multiple workflows from running simultaneously for the same job
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+# Events triggering this workflow
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Write permission
+permissions:
+  contents: write
+
+jobs:
+  # Runs spell-checking on documentation and Markdown files
+  spell-check:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
+    with:
+      includes: |
+        **/*.md
+      modified_files_only: false
