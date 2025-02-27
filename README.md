@@ -1,5 +1,7 @@
 # Taskify
 
+![Image](https://github.com/user-attachments/assets/8e84a217-0f04-4f17-83c2-f702f2aa1c3f)
+
 ![coverage][coverage_badge]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
