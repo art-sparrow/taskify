@@ -4,8 +4,8 @@ import 'package:hive/hive.dart';
 part 'register_hive.g.dart';
 
 @HiveType(typeId: 0)
-class SignUpEntity extends Equatable {
-  const SignUpEntity({
+class RegisterEntity extends Equatable {
+  const RegisterEntity({
     this.name = '',
     this.phone = '',
     this.email = '',

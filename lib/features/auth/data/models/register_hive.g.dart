@@ -6,17 +6,17 @@ part of 'register_hive.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SignUpEntityAdapter extends TypeAdapter<SignUpEntity> {
+class RegisterEntityAdapter extends TypeAdapter<RegisterEntity> {
   @override
   final int typeId = 0;
 
   @override
-  SignUpEntity read(BinaryReader reader) {
+  RegisterEntity read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SignUpEntity(
+    return RegisterEntity(
       name: fields[0] as String,
       phone: fields[1] as String,
       email: fields[2] as String,
@@ -27,7 +27,7 @@ class SignUpEntityAdapter extends TypeAdapter<SignUpEntity> {
   }
 
   @override
-  void write(BinaryWriter writer, SignUpEntity obj) {
+  void write(BinaryWriter writer, RegisterEntity obj) {
     writer
       ..writeByte(6)
       ..writeByte(0)
@@ -50,7 +50,7 @@ class SignUpEntityAdapter extends TypeAdapter<SignUpEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SignUpEntityAdapter &&
+      other is RegisterEntityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
