@@ -20,9 +20,11 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     PlatformDispatcher.instance.onPlatformBrightnessChanged = () {
       if (state.isDeviceTheme) {
         final brightness = PlatformDispatcher.instance.platformBrightness;
-        add(brightness == Brightness.dark
-            ? SwitchToDarkTheme()
-            : SwitchToLightTheme());
+        add(
+          brightness == Brightness.dark
+              ? SwitchToDarkTheme()
+              : SwitchToLightTheme(),
+        );
       }
     };
   }
@@ -70,12 +72,14 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ) async {
     final brightness = PlatformDispatcher.instance.platformBrightness;
     final isDark = brightness == Brightness.dark;
-    emit(ThemeState(
-      themeData: isDark
-          ? _buildTheme(ThemeColors.darkThemeColors)
-          : _buildTheme(ThemeColors.lightThemeColors),
-      isDeviceTheme: true,
-    ));
+    emit(
+      ThemeState(
+        themeData: isDark
+            ? _buildTheme(ThemeColors.darkThemeColors)
+            : _buildTheme(ThemeColors.lightThemeColors),
+        isDeviceTheme: true,
+      ),
+    );
     await _prefs.setBool(_deviceKey, true);
   }
 
@@ -94,22 +98,34 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
       ),
       textTheme: TextTheme(
         displayLarge: TextStyle(
-            color: colors.textColor, fontSize: 36, fontWeight: FontWeight.bold),
+          color: colors.textColor,
+          fontSize: 36,
+          fontWeight: FontWeight.bold,
+        ),
         displayMedium: TextStyle(color: colors.textColor, fontSize: 32),
         displaySmall: TextStyle(color: colors.textColor, fontSize: 28),
         headlineLarge: TextStyle(
-            color: colors.textColor, fontSize: 24, fontWeight: FontWeight.bold),
+          color: colors.textColor,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
         headlineMedium: TextStyle(color: colors.textColor, fontSize: 22),
         headlineSmall: TextStyle(color: colors.textColor, fontSize: 20),
         titleLarge: TextStyle(
-            color: colors.textColor, fontSize: 18, fontWeight: FontWeight.bold),
+          color: colors.textColor,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
         titleMedium: TextStyle(color: colors.textColor, fontSize: 16),
         titleSmall: TextStyle(color: colors.textColor, fontSize: 14),
         bodyLarge: TextStyle(color: colors.textColor, fontSize: 16),
         bodyMedium: TextStyle(color: colors.textColor, fontSize: 14),
         bodySmall: TextStyle(color: colors.textColor, fontSize: 12),
         labelLarge: TextStyle(
-            color: colors.textColor, fontSize: 16, fontWeight: FontWeight.w500),
+          color: colors.textColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
         labelMedium: TextStyle(color: colors.textColor, fontSize: 14),
         labelSmall: TextStyle(color: colors.textColor, fontSize: 12),
       ),
