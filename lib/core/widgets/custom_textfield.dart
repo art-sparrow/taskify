@@ -1,7 +1,9 @@
-// ignore_for_file: file_names, must_be_immutable, prefer_null_aware_method_calls, lines_longer_than_80_chars, dead_code
+// ignore_for_file: file_names, must_be_immutable, prefer_null_aware_method_calls, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/core/utils/app_colors.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc.dart';
 
 class CustomTextField extends StatefulWidget {
   CustomTextField({
@@ -40,11 +42,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     final isEnabled = widget.enabled ?? !widget.isLoading;
     // Access the current theme state directly
-    /* final isDarkTheme =
+    final isDarkTheme =
         BlocProvider.of<ThemeBloc>(context).state.themeData.brightness ==
-            Brightness.dark; */
-
-    const isDarkTheme = false;
+            Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
