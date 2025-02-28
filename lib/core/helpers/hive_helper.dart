@@ -7,7 +7,7 @@ abstract class HiveHelper {
   Future<void> initBoxes();
 
   // Auth
-  void persistUserProfile({
+  Future<void> persistUserProfile({
     required RegistrationEntity userProfile,
   });
 
@@ -22,10 +22,14 @@ class HiveHelperImplementation implements HiveHelper {
 
   @override
   Future<void> initBoxes() async {
-    await Hive.initFlutter();
-    Hive.registerAdapter(RegistrationEntityAdapter());
-    await Hive.openBox<dynamic>('taskify_dev');
-    await Hive.openBox<RegistrationEntity>('user_box');
+    try {
+      await Hive.initFlutter();
+      Hive.registerAdapter(RegistrationEntityAdapter());
+      await Hive.openBox<dynamic>('taskify_dev');
+      await Hive.openBox<RegistrationEntity>('user_box');
+    } catch (e) {
+      _logger.e('Hive init failed: $e');
+    }
   }
 
   @override
@@ -35,8 +39,11 @@ class HiveHelperImplementation implements HiveHelper {
   }
 
   @override
-  void persistUserProfile({required RegistrationEntity userProfile}) {
-    Hive.box<RegistrationEntity>('user_box').put('currentUser', userProfile);
+  Future<void> persistUserProfile({
+    required RegistrationEntity userProfile,
+  }) async {
+    await Hive.box<RegistrationEntity>('user_box')
+        .put('currentUser', userProfile);
     _logger.i('Persisted user profile: ${userProfile.email}');
   }
 
