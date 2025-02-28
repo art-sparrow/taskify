@@ -12,7 +12,28 @@
           "package_name": "com.example.verygoodcore.taskify"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "800521930890-c259a0blq97vs4etca229l4sc0cd2m07.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.verygoodcore.taskify",
+            "certificate_hash": "5a59e04b37216c4b51f72d41170870824794964e"
+          }
+        },
+        {
+          "client_id": "800521930890-f2e1og6dq3bdkr8b0v7udpt13t626b69.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.verygoodcore.taskify",
+            "certificate_hash": "d4b8c51ed30ab789d934e6d4c67531b3573c467c"
+          }
+        },
+        {
+          "client_id": "800521930890-o48rmo0d0kiotide4lgokpmltbf83801.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD-DpflqTQ6NekfrXtZR41-QGM9xAKHW7E"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800521930890-o48rmo0d0kiotide4lgokpmltbf83801.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "800521930890-9ucqb2cktffjbrr0bdro3b0ec94f032p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.verygoodcore.taskify"
+              }
+            }
+          ]
         }
       }
     }

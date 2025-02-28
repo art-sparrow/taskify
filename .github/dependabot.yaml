@@ -4,7 +4,14 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "*"  # Wildcard matches all GitHub Actions dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
   - package-ecosystem: "pub"
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "*"  # Wildcard matches all Pub dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
+        
