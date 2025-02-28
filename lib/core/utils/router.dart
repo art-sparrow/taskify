@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:taskify/features/auth/presentation/login_screen.dart';
 import 'package:taskify/features/auth/presentation/register_screen.dart';
+import 'package:taskify/features/auth/presentation/reset_pwd_screen.dart';
+import 'package:taskify/features/decision/presentation/decision_screen.dart';
+import 'package:taskify/features/landing/presentation/landing_screen.dart';
 
 class TaskifyRouter {
   static const String decisionScreenRoute = 'decision-screen';
@@ -15,12 +18,12 @@ class TaskifyRouter {
       case decisionScreenRoute:
         return PageTransition(
           type: PageTransitionType.rightToLeft,
-          child: const LoginScreen(),
+          child: const DecisionScreen(),
         );
       case landingScreenRoute:
         return PageTransition(
           type: PageTransitionType.rightToLeft,
-          child: const LoginScreen(),
+          child: const LandingScreen(),
         );
       case logInScreenRoute:
         return PageTransition(
@@ -35,7 +38,7 @@ class TaskifyRouter {
       case resetPwdScreenRoute:
         return PageTransition(
           type: PageTransitionType.rightToLeft,
-          child: const LoginScreen(),
+          child: const ResetPwdScreen(),
         );
     }
     return null;
