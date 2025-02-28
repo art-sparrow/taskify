@@ -1,6 +1,6 @@
 name: taskify
 description: A task management app.
-version: 1.0.0+102
+version: 1.0.0+103
 publish_to: none
 
 environment:
