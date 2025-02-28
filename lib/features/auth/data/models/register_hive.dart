@@ -4,8 +4,8 @@ import 'package:hive/hive.dart';
 part 'register_hive.g.dart';
 
 @HiveType(typeId: 0)
-class RegisterEntity extends Equatable {
-  const RegisterEntity({
+class RegistrationEntity extends Equatable {
+  const RegistrationEntity({
     this.name = '',
     this.phone = '',
     this.email = '',
@@ -33,4 +33,22 @@ class RegisterEntity extends Equatable {
 
   @override
   List<Object?> get props => [name, phone, email, joinedOn, uid, fcmToken];
+
+  RegistrationEntity copyWith({
+    String? name,
+    String? phone,
+    String? email,
+    String? joinedOn,
+    String? uid,
+    String? fcmToken,
+  }) {
+    return RegistrationEntity(
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      email: email ?? this.email,
+      joinedOn: joinedOn ?? this.joinedOn,
+      uid: uid ?? this.uid,
+      fcmToken: fcmToken ?? this.fcmToken,
+    );
+  }
 }

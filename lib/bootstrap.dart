@@ -2,7 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:taskify/core/helpers/hive_helper.dart';
+import 'package:taskify/core/helpers/service_locator.dart';
+import 'package:taskify/firebase_options.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -27,7 +32,29 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Bloc.observer = const AppBlocObserver();
 
-  // Add cross-flavor configuration here
+  // Cross-flavor configuration
+
+  // Initialize Firebase (Backend-as-a-Service)
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    log('Firebase initialization failed: $e');
+  }
+
+  // Restrict app to portrait orientation
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
+  // Initialize Get It and Hive
+  await setupLocator();
+  try {
+    await getIt<HiveHelper>().initBoxes();
+  } catch (e) {
+    log('Hive initialization failed: $e');
+  }
 
   runApp(await builder());
 }

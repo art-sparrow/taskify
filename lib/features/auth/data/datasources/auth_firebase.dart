@@ -53,14 +53,14 @@ class AuthFirebase {
       final email = userCredential.user?.email;
       if (email == null) throw Exception('No email from Google sign-in');
 
-      // Exit if the user has a firestore entry
+      // Exit if the user lacks a firestore entry
       final userModel = await getUserByEmail(email);
       if (userModel == null) {
         throw Exception('User not registered. Please sign up first.');
       }
 
       // Existing user: return email
-      return userCredential.user?.email;
+      return email;
     } catch (e) {
       log('Google sign-in failed: $e');
       throw Exception('Google sign-in failed: $e');
