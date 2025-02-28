@@ -10,6 +10,7 @@ import 'package:taskify/core/helpers/service_locator.dart';
 import 'package:taskify/features/auth/blocs/login_bloc/login_bloc.dart';
 import 'package:taskify/features/auth/blocs/register_bloc/register_bloc.dart';
 import 'package:taskify/features/auth/blocs/reset_pwd_bloc/reset_pwd_bloc.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc.dart';
 import 'package:taskify/firebase_options.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -74,6 +75,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         // Reset password Bloc
         BlocProvider<ResetPwdBloc>(
           create: (context) => ResetPwdBloc(),
+        ),
+        BlocProvider<ThemeBloc>(
+          create: (_) => getIt<ThemeBloc>(),
         ),
       ],
       child: await builder(),
