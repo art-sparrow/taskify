@@ -44,7 +44,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         uid: userModel.uid,
         fcmToken: userModel.fcmToken,
       );
-      hiveHelper.persistUserProfile(userProfile: entity);
+      await hiveHelper.persistUserProfile(userProfile: entity);
       emit(LogInSuccess(entity));
     } catch (e) {
       emit(LogInFailure(e.toString()));
@@ -69,7 +69,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         uid: userModel.uid,
         fcmToken: userModel.fcmToken,
       );
-      hiveHelper.persistUserProfile(userProfile: entity);
+      await hiveHelper.persistUserProfile(userProfile: entity);
       emit(LogInSuccess(entity));
     } catch (e) {
       emit(LogInFailure(e.toString()));

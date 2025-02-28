@@ -50,7 +50,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         uid: updatedModel.uid,
         fcmToken: updatedModel.fcmToken,
       );
-      hiveHelper.persistUserProfile(userProfile: entity);
+      await hiveHelper.persistUserProfile(userProfile: entity);
 
       emit(RegisterSuccess(entity));
     } catch (e) {
