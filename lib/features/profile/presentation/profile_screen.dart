@@ -170,9 +170,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                 },
                         ),
-                        /* const SizedBox(
+                        const SizedBox(
                           height: 20,
-                        ), */
+                        ),
                         //logout
                         MenuOption(
                           title: 'Log out',
