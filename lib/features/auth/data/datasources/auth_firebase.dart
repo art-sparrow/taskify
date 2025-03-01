@@ -28,6 +28,16 @@ class AuthFirebase {
     }
   }
 
+  Future<void> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+      await GoogleSignIn().signOut();
+    } catch (e) {
+      log('Sign out failed: $e');
+      throw Exception('Sign out failed: $e');
+    }
+  }
+
   Future<String?> signInViaGoogle() async {
     try {
       // Start interactive sign-in process
@@ -51,17 +61,25 @@ class AuthFirebase {
       final userCredential =
           await firebaseAuth.signInWithCredential(credential);
       final email = userCredential.user?.email;
-      if (email == null) throw Exception('No email from Google sign-in');
+      if (email == null) {
+        await firebaseAuth.signOut();
+        await GoogleSignIn().signOut();
+        throw Exception('No email from Google sign-in');
+      }
 
       // Exit if the user lacks a firestore entry
       final userModel = await getUserByEmail(email);
       if (userModel == null) {
+        await firebaseAuth.signOut();
+        await GoogleSignIn().signOut();
         throw Exception('User not registered. Please sign up first.');
       }
 
       // Existing user: return email
       return email;
     } catch (e) {
+      await firebaseAuth.signOut();
+      await GoogleSignIn().signOut();
       log('Google sign-in failed: $e');
       throw Exception('Google sign-in failed: $e');
     }

@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskify/core/helpers/hive_helper.dart';
 import 'package:taskify/features/auth/data/datasources/auth_firebase.dart';
-import 'package:taskify/features/profile/blocs/theme_bloc.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 
 final getIt = GetIt.instance;
 

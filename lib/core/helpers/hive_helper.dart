@@ -11,7 +11,7 @@ abstract class HiveHelper {
     required RegistrationEntity userProfile,
   });
 
-  Future<RegistrationEntity?> retrieveUserProfile();
+  RegistrationEntity? retrieveUserProfile();
 
   // Clear
   Future<void> clearHiveDB();
@@ -48,7 +48,7 @@ class HiveHelperImplementation implements HiveHelper {
   }
 
   @override
-  Future<RegistrationEntity?> retrieveUserProfile() async {
+  RegistrationEntity? retrieveUserProfile() {
     final user = Hive.box<RegistrationEntity>('user_box').get('currentUser');
     _logger.i('Retrieved user profile: ${user?.email ?? 'none'}');
     return user;

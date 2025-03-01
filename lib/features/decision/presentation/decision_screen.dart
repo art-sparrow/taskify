@@ -16,10 +16,15 @@ class _DecisionScreenState extends State<DecisionScreen> {
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+          // Connection state check
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox.shrink();
+          }
+
           // Logged in
           if (snapshot.hasData) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(
+              Navigator.pushReplacementNamed(
                 context,
                 TaskifyRouter.landingScreenRoute,
               );
@@ -28,7 +33,7 @@ class _DecisionScreenState extends State<DecisionScreen> {
           // Not logged in or registered
           else {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(
+              Navigator.pushReplacementNamed(
                 context,
                 TaskifyRouter.logInScreenRoute,
               );
