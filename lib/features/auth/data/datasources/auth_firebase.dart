@@ -28,6 +28,16 @@ class AuthFirebase {
     }
   }
 
+  Future<void> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+      await GoogleSignIn().signOut();
+    } catch (e) {
+      log('Sign out failed: $e');
+      throw Exception('Sign out failed: $e');
+    }
+  }
+
   Future<String?> signInViaGoogle() async {
     try {
       // Start interactive sign-in process
