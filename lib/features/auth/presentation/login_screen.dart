@@ -91,8 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LogInFailure) {
             // Show error message
             ErrorMessage.show(context, state.errorMessage);
-          }
-          if (state is LogInSuccess) {
+          } else if (state is LogInSuccess) {
             // Show notification
             NotificationService().showNotification(
               id: 1,

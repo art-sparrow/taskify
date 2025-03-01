@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:taskify/core/constants/assets_path.dart';
 import 'package:taskify/core/helpers/hive_helper.dart';
 import 'package:taskify/core/helpers/service_locator.dart';
@@ -24,12 +25,20 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late final RegistrationEntity? user;
+  final _logger = Logger();
 
   @override
   void initState() {
     super.initState();
     // Fetch user
     user = getIt<HiveHelper>().retrieveUserProfile();
+    if (user == null) {
+      // Redirect to login if no user
+      _logger.e('No user found in Hive—redirecting to login');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, TaskifyRouter.logInScreenRoute);
+      });
+    }
   }
 
   void _logOut() {
