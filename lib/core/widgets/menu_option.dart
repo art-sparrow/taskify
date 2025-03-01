@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/core/utils/app_colors.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc.dart';
 
 class MenuOption extends StatelessWidget {
   const MenuOption({
@@ -21,75 +23,61 @@ class MenuOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Access the current theme state directly
+    final isDarkTheme =
+        BlocProvider.of<ThemeBloc>(context).state.themeData.brightness ==
+            Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withValues(
-            alpha: 0.5,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //leading icon
+          CircleAvatar(
+            backgroundColor: isDarkTheme
+                ? AppColors.white.withValues(
+                    alpha: 0.1,
+                  )
+                : AppColors.greyDark.withValues(
+                    alpha: 0.1,
+                  ),
+            child: leadingIcon,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(
-                alpha: 0.5,
+          // title and trailing icon
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 15,
+                top: 6,
               ),
-              blurRadius: 12,
-              spreadRadius: 3,
-            ),
-          ],
-          borderRadius: BorderRadius.circular(15),
-          border: Border.fromBorderSide(
-            BorderSide(
-              width: 0.1,
-              color: AppColors.primary.withValues(
-                alpha: 0.5,
-              ),
-            ),
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //leading icon
-            leadingIcon,
-            // title and trailing icon
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 8,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: isDarkTheme ? AppColors.white : AppColors.greyDark,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (trailing) trailingIcon,
+                  if (isLoading)
+                    const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
                         color: AppColors.primary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        strokeWidth: 2,
                       ),
                     ),
-                    if (trailing) trailingIcon,
-                    if (isLoading)
-                      const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                          strokeWidth: 2,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -98,11 +98,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             isDarkTheme
                                 ? LineAwesomeIcons.moon_solid
                                 : LineAwesomeIcons.lightbulb,
-                            color: AppColors.primary,
+                            color: isDarkTheme
+                                ? AppColors.white
+                                : AppColors.greyDark,
                           ),
-                          trailingIcon: const Icon(
+                          trailingIcon: Icon(
                             LineAwesomeIcons.angle_right_solid,
-                            color: AppColors.primary,
+                            color: isDarkTheme
+                                ? AppColors.white
+                                : AppColors.greyDark,
                           ),
                           trailing: true,
                           onTap: () async {
