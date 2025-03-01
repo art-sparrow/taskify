@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:taskify/core/constants/assets_path.dart';
+import 'package:taskify/core/services/notification_service.dart';
 import 'package:taskify/core/utils/app_colors.dart';
 import 'package:taskify/core/utils/router.dart';
 import 'package:taskify/core/widgets/custom_button.dart';
@@ -108,11 +109,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
           if (state is RegisterSuccess) {
             // Show notification
-            /* NotificationService().showNotification(
+            NotificationService().showNotification(
               id: 0,
               title: 'Welcome',
               message: 'Enjoy your task management journey!',
-            ); */
+            );
             // Navigate to the landing screen
             Navigator.pushNamed(
               context,

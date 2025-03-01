@@ -6,12 +6,14 @@ import 'package:taskify/features/auth/presentation/reset_pwd_screen.dart';
 import 'package:taskify/features/decision/presentation/decision_screen.dart';
 import 'package:taskify/features/landing/presentation/landing_screen.dart';
 import 'package:taskify/features/profile/presentation/change_theme_screen.dart';
+import 'package:taskify/features/profile/presentation/notification_settings_screen.dart';
 
 class TaskifyRouter {
   static const String changeThemeScreenRoute = 'changeTheme-screen';
   static const String decisionScreenRoute = 'decision-screen';
   static const String landingScreenRoute = 'landing-screen';
   static const String logInScreenRoute = 'logIn-screen';
+  static const String notificationsScreenRoute = 'notifications-screen';
   static const String registerScreenRoute = 'register-screen';
   static const String resetPwdScreenRoute = 'resetPwd-screen';
 
@@ -36,6 +38,11 @@ class TaskifyRouter {
         return PageTransition(
           type: PageTransitionType.bottomToTop,
           child: const LoginScreen(),
+        );
+      case notificationsScreenRoute:
+        return PageTransition(
+          type: PageTransitionType.rightToLeft,
+          child: const NotificationSettingsScreen(),
         );
       case registerScreenRoute:
         return PageTransition(
