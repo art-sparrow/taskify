@@ -11,6 +11,7 @@ import 'package:taskify/core/services/notification_service.dart';
 import 'package:taskify/features/auth/blocs/login_bloc/login_bloc.dart';
 import 'package:taskify/features/auth/blocs/register_bloc/register_bloc.dart';
 import 'package:taskify/features/auth/blocs/reset_pwd_bloc/reset_pwd_bloc.dart';
+import 'package:taskify/features/profile/blocs/logout_bloc/logout_bloc.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 import 'package:taskify/firebase_options.dart';
 
@@ -71,6 +72,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         // Log in Bloc
         BlocProvider<LogInBloc>(
           create: (context) => LogInBloc(),
+        ),
+        // Log out Bloc
+        BlocProvider<LogoutBloc>(
+          create: (context) => LogoutBloc(),
         ),
         // Register Bloc
         BlocProvider<RegisterBloc>(
