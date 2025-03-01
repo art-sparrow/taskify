@@ -16,8 +16,8 @@ class CustomToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 40,
-      height: 30,
+      width: 50,
+      height: 40,
       child: FittedBox(
         fit: BoxFit.fill,
         child: Switch(
@@ -28,7 +28,7 @@ class CustomToggle extends StatelessWidget {
           activeColor: AppColors.primary,
           activeTrackColor: AppColors.primary,
           inactiveTrackColor: AppColors.primary.withValues(
-            alpha: 0.3,
+            alpha: 0.1,
           ),
           thumbColor: const WidgetStatePropertyAll<Color>(
             AppColors.greyDark,

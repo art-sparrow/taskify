@@ -28,12 +28,11 @@ class SelectionTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (!showCustomIcon) icon else customIcon,
-          const SizedBox(
-            width: 10,
-          ),
           title,
+          if (!showCustomIcon) icon else customIcon,
         ],
       ),
     );
