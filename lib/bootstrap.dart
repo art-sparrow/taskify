@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/core/helpers/hive_helper.dart';
 import 'package:taskify/core/helpers/service_locator.dart';
+import 'package:taskify/core/services/notification_service.dart';
 import 'package:taskify/features/auth/blocs/login_bloc/login_bloc.dart';
 import 'package:taskify/features/auth/blocs/register_bloc/register_bloc.dart';
 import 'package:taskify/features/auth/blocs/reset_pwd_bloc/reset_pwd_bloc.dart';
@@ -59,6 +60,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   } catch (e) {
     log('Hive initialization failed: $e');
   }
+
+  // Initialize NotificationService
+  await NotificationService().initialize();
 
   // Initialize the Blocs
   runApp(
