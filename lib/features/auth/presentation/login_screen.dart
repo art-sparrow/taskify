@@ -88,10 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<LogInBloc, LogInState>(
         listener: (context, state) {
           if (state is LogInFailure) {
-            // Show error message only if the snackbar is not already visible
-            if (!ScaffoldMessenger.of(context).mounted) {
-              ErrorMessage.show(context, state.errorMessage);
-            }
+            // Show error message
+            ErrorMessage.show(context, state.errorMessage);
           }
           if (state is LogInSuccess) {
             // Navigate to the landing screen
