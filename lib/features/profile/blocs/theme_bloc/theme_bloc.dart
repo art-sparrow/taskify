@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskify/core/utils/theme_colors.dart';
-import 'package:taskify/features/profile/blocs/theme_event.dart';
-import 'package:taskify/features/profile/blocs/theme_state.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_event.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc({required SharedPreferences sharedPreferences})

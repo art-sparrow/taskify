@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/core/utils/router.dart';
 import 'package:taskify/features/decision/presentation/decision_screen.dart';
-import 'package:taskify/features/profile/blocs/theme_bloc.dart';
-import 'package:taskify/features/profile/blocs/theme_state.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_state.dart';
 import 'package:taskify/l10n/l10n.dart';
 
 class App extends StatelessWidget {

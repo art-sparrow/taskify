@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/core/utils/app_colors.dart';
-import 'package:taskify/features/profile/blocs/theme_bloc.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 
 class CustomTextField extends StatefulWidget {
   CustomTextField({

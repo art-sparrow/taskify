@@ -7,7 +7,7 @@ import 'package:taskify/core/utils/app_colors.dart';
 import 'package:taskify/core/utils/router.dart';
 import 'package:taskify/core/widgets/menu_option.dart';
 import 'package:taskify/features/auth/data/models/register_hive.dart';
-import 'package:taskify/features/profile/blocs/theme_bloc.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

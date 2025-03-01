@@ -5,9 +5,9 @@ import 'package:taskify/core/utils/app_colors.dart';
 import 'package:taskify/core/widgets/custom_toggle.dart';
 import 'package:taskify/core/widgets/selection_tile.dart';
 import 'package:taskify/core/widgets/success_message.dart';
-import 'package:taskify/features/profile/blocs/theme_bloc.dart';
-import 'package:taskify/features/profile/blocs/theme_event.dart';
-import 'package:taskify/features/profile/blocs/theme_state.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_event.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_state.dart';
 
 class ChangeThemeScreen extends StatefulWidget {
   const ChangeThemeScreen({super.key});

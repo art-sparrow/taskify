@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/core/utils/app_colors.dart';
-import 'package:taskify/features/profile/blocs/theme_bloc.dart';
-import 'package:taskify/features/profile/blocs/theme_state.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_state.dart';
 
 class CustomOutlineButton extends StatelessWidget {
   const CustomOutlineButton({
