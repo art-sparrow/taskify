@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:taskify/core/constants/assets_path.dart';
+import 'package:taskify/core/services/notification_service.dart';
 import 'package:taskify/core/utils/app_colors.dart';
 import 'package:taskify/core/utils/router.dart';
 import 'package:taskify/core/widgets/custom_button.dart';
@@ -92,6 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ErrorMessage.show(context, state.errorMessage);
           }
           if (state is LogInSuccess) {
+            // Show notification
+            NotificationService().showNotification(
+              id: 1,
+              title: 'Welcome back',
+              message: 'Pick up from where you left!',
+            );
             // Navigate to the landing screen
             Navigator.pushNamed(
               context,

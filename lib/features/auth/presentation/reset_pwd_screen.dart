@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:taskify/core/constants/assets_path.dart';
+import 'package:taskify/core/services/notification_service.dart';
 import 'package:taskify/core/utils/app_colors.dart';
 import 'package:taskify/core/utils/router.dart';
 import 'package:taskify/core/widgets/custom_button.dart';
@@ -87,6 +88,12 @@ class _ResetPwdScreenState extends State<ResetPwdScreen> {
             ErrorMessage.show(context, state.errorMessage);
           }
           if (state is ResetPwdSuccess) {
+            // Show notification
+            NotificationService().showNotification(
+              id: 2,
+              title: 'Check mail',
+              message: 'Reset link was sent to ${emailController.text.trim()}',
+            );
             //show success message
             SuccessMessage.show(
               context,
