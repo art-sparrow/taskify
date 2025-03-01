@@ -8,7 +8,6 @@ import 'package:taskify/core/utils/router.dart';
 import 'package:taskify/core/widgets/menu_option.dart';
 import 'package:taskify/features/auth/data/models/register_hive.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc.dart';
-import 'package:taskify/features/profile/blocs/theme_state.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -34,6 +33,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         statusBarColor: AppColors.transparent,
       ),
     );
+
+    // Access the current theme state directly
+    final isDarkTheme =
+        BlocProvider.of<ThemeBloc>(context).state.themeData.brightness ==
+            Brightness.dark;
 
     // Define gradient
     final linearGradient = const LinearGradient(
@@ -87,61 +91,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 60,
                     ),
                     //theme selection
-                    BlocBuilder<ThemeBloc, ThemeState>(
-                      builder: (context, state) {
-                        // Switch icon based on the theme
-                        final isDarkTheme =
-                            state.themeData.brightness == Brightness.dark;
-                        return MenuOption(
-                          title: 'Change theme',
-                          leadingIcon: Icon(
-                            isDarkTheme
-                                ? LineAwesomeIcons.moon_solid
-                                : LineAwesomeIcons.lightbulb,
-                            color: isDarkTheme
-                                ? AppColors.white
-                                : AppColors.greyDark,
-                          ),
-                          trailingIcon: Icon(
-                            LineAwesomeIcons.angle_right_solid,
-                            color: isDarkTheme
-                                ? AppColors.white
-                                : AppColors.greyDark,
-                          ),
-                          trailing: true,
-                          onTap: () async {
-                            await Navigator.pushNamed(
-                              context,
-                              TaskifyRouter.changeThemeScreenRoute,
-                            );
-                          },
+                    MenuOption(
+                      title: 'Change theme',
+                      leadingIcon: Icon(
+                        isDarkTheme
+                            ? LineAwesomeIcons.moon_solid
+                            : LineAwesomeIcons.lightbulb,
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                      ),
+                      trailingIcon: Icon(
+                        LineAwesomeIcons.angle_right_solid,
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                      ),
+                      trailing: true,
+                      onTap: () async {
+                        await Navigator.pushNamed(
+                          context,
+                          TaskifyRouter.changeThemeScreenRoute,
                         );
                       },
                     ),
-                    /* const SizedBox(
+                    const SizedBox(
                       height: 20,
-                    ), */
+                    ),
                     //notifications
-                    /* MenuOption(
+                    MenuOption(
                       title: 'Notifications',
-                      leadingIcon: const Icon(
+                      leadingIcon: Icon(
                         LineAwesomeIcons.bell_solid,
-                        color: AppColors.primaryColor,
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
                       ),
-                      trailingIcon: const Icon(
+                      trailingIcon: Icon(
                         LineAwesomeIcons.angle_right_solid,
-                        color: AppColors.primaryColor,
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
                       ),
                       trailing: true,
-                      onTap: state is LogOutLoading
+                      /* onTap: state is LogOutLoading
                           ? () {}
                           : () async {
                               await Navigator.pushNamed(
                                 context,
                                 TaskifyRouter.notificationsScreenRoute,
                               );
-                            },
-                    ), */
+                            }, */
+                      onTap: () async {
+                        await Navigator.pushNamed(
+                          context,
+                          TaskifyRouter.notificationsScreenRoute,
+                        );
+                      },
+                    ),
                     /* const SizedBox(
                       height: 20,
                     ), */
