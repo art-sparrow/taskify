@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -122,7 +124,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 // Tasks list view
                 Flexible(
                   child: tasks.isEmpty
@@ -140,57 +142,133 @@ class _TasksScreenState extends State<TasksScreen> {
                           itemCount: tasks.length,
                           itemBuilder: (context, index) {
                             final task = tasks[index];
-                            return ListTile(
-                              title: Text(
-                                task.title,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      color: task.isDone
-                                          ? AppColors.greyDark
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                      decoration: task.isDone
-                                          ? TextDecoration.lineThrough
-                                          : null,
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 10,
+                                    right: 10,
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor:
+                                        AppColors.primary.withValues(
+                                      alpha: 0.2,
                                     ),
-                              ),
-                              subtitle: Text(
-                                'Due: ${task.dueDate.toString().split(' ')[0]}',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                              leading: Checkbox(
-                                value: task.isDone,
-                                onChanged: (value) {
-                                  final updatedTask =
-                                      task.copyWith(isDone: value ?? false);
-                                  context
-                                      .read<TaskBloc>()
-                                      .add(UpdateTask(updatedTask));
-                                },
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.delete_outline_rounded,
-                                  color: AppColors.error,
-                                ),
-                                onPressed: () => context.read<TaskBloc>().add(
-                                      DeleteTask(
-                                        task.taskId,
+                                    child: Text(
+                                      task.title.substring(0, 1),
+                                      style: const TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                              ),
-                              onTap: () async {
-                                await Navigator.pushNamed(
-                                  context,
-                                  TaskifyRouter.taskDetailsScreenRoute,
-                                  arguments: {
-                                    'task': task,
-                                  },
-                                );
-                              },
+                                  ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Task name, due date, and status
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: 90,
+                                          child: Text(
+                                            task.title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Due: ${task.dueDate.toString().split(' ')[0]}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                        Container(
+                                          height: 20,
+                                          width: 80,
+                                          margin: const EdgeInsets.only(
+                                            top: 4,
+                                          ),
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: task.isDone
+                                                ? AppColors.success.withValues(
+                                                    alpha: 0.2,
+                                                  )
+                                                : AppColors.warning.withValues(
+                                                    alpha: 0.2,
+                                                  ),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(15),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            task.isDone
+                                                ? 'Complete'
+                                                : 'Pending',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  color: task.isDone
+                                                      ? AppColors.success
+                                                      : AppColors.warning,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // delete task
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 60,
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete_outline_rounded,
+                                          color: AppColors.error,
+                                        ),
+                                        onPressed: () =>
+                                            context.read<TaskBloc>().add(
+                                                  DeleteTask(
+                                                    task.taskId,
+                                                  ),
+                                                ),
+                                      ),
+                                    ),
+                                    // edit task
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.edit_outlined,
+                                        color: AppColors.success,
+                                      ),
+                                      onPressed: () async {
+                                        await Navigator.pushNamed(
+                                          context,
+                                          TaskifyRouter.taskDetailsScreenRoute,
+                                          arguments: {
+                                            'task': task,
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             );
                           },
                         ),
