@@ -1,11 +1,25 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:taskify/core/constants/assets_path.dart';
 import 'package:taskify/core/utils/app_colors.dart';
+import 'package:taskify/core/widgets/custom_bottom_sheet.dart';
+import 'package:taskify/core/widgets/custom_button.dart';
+import 'package:taskify/core/widgets/custom_container.dart';
+import 'package:taskify/core/widgets/custom_outline_button.dart';
+import 'package:taskify/core/widgets/custom_textfield.dart';
+import 'package:taskify/core/widgets/custom_toggle.dart';
+import 'package:taskify/core/widgets/error_message.dart';
+import 'package:taskify/core/widgets/priority_selector.dart';
+import 'package:taskify/core/widgets/selection_tile.dart';
+import 'package:taskify/core/widgets/success_message.dart';
+import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_bloc.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_event.dart';
+import 'package:taskify/features/task/blocs/task_bloc/task_state.dart';
 import 'package:taskify/features/task/data/models/task_hive.dart';
 
 class TaskDetailScreen extends StatefulWidget {
@@ -27,9 +41,26 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   List<Subtask> subtasks = [];
   Task? taskToEdit;
 
+  // Focus nodes
+  final FocusNode _titleFocusNode = FocusNode();
+  final FocusNode _descriptionFocusNode = FocusNode();
+
+  // Maps for subtask focus nodes and controllers
+  final Map<int, FocusNode> subtaskFocusNodes = {};
+  final Map<int, TextEditingController> subtaskControllers = {};
+
+  void _onFocusChange() {
+    setState(() {
+      // Trigger rebuild
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _titleFocusNode.addListener(_onFocusChange);
+    _descriptionFocusNode.addListener(_onFocusChange);
     taskToEdit = widget.task;
     if (taskToEdit != null) {
       titleController.text = taskToEdit!.title;
@@ -38,7 +69,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       dueDate = taskToEdit!.dueDate;
       priority = taskToEdit!.priority;
       isDone = taskToEdit!.isDone;
-      subtasks = taskToEdit!.subtasks;
+      subtasks = List.from(taskToEdit!.subtasks); // Create a modifiable copy
+      // Initialize controllers and focus nodes for existing subtasks
+      for (final subtask in subtasks) {
+        subtaskControllers[subtask.id] =
+            TextEditingController(text: subtask.title);
+        subtaskFocusNodes[subtask.id] = FocusNode()
+          ..addListener(_onFocusChange);
+      }
     } else {
       startDate = DateTime.now();
       dueDate = DateTime.now();
@@ -47,16 +85,27 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   @override
   void dispose() {
+    // Remove listeners
+    _titleFocusNode.removeListener(_onFocusChange);
+    _descriptionFocusNode.removeListener(_onFocusChange);
+    _titleFocusNode.dispose();
+    _descriptionFocusNode.dispose();
     titleController.dispose();
     descriptionController.dispose();
+    // Dispose subtask focus nodes and controllers
+    subtaskFocusNodes.forEach((_, focusNode) {
+      focusNode
+        ..removeListener(_onFocusChange)
+        ..dispose();
+    });
+    subtaskControllers.forEach((_, controller) => controller.dispose());
+
     super.dispose();
   }
 
   void _saveTask() {
-    if (titleController.text.isEmpty || dueDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Title and Due Date are required')),
-      );
+    if (titleController.text.isEmpty || descriptionController.text.isEmpty) {
+      ErrorMessage.show(context, 'Enter task title and description');
       return;
     }
     final task = taskToEdit != null
@@ -91,20 +140,36 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     Navigator.pop(context);
   }
 
+  // Add one subtask text field and toggle
   void _addSubtask() {
     setState(() {
+      final newId = subtasks.isEmpty ? 1 : subtasks.last.id + 1;
       subtasks.add(
         Subtask(
-          id: subtasks.length + 1,
+          id: newId,
           title: 'New Subtask',
           isDone: false,
         ),
       );
+      subtaskControllers[newId] = TextEditingController(text: 'New Subtask');
+      subtaskFocusNodes[newId] = FocusNode()..addListener(_onFocusChange);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Set the status bar color to transparent
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: AppColors.transparent,
+      ),
+    );
+
+    // Access the current theme state directly
+    final isDarkTheme =
+        BlocProvider.of<ThemeBloc>(context).state.themeData.brightness ==
+            Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -114,36 +179,80 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(taskToEdit != null ? 'Edit Task' : 'Add Task'),
-              const SizedBox(height: 10),
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Title*'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: descriptionController,
-                decoration: const InputDecoration(labelText: 'Description'),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      startDate == null
-                          ? 'Start Date: ${DateTime.now().toString().split(' ')[0]}'
-                          : 'Start: ${startDate!.toString().split(' ')[0]}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+      body: BlocConsumer<TaskBloc, TaskState>(
+        listener: (context, state) {
+          if (state is TaskFailure) {
+            ErrorMessage.show(
+              context,
+              'Could not modify task ${state.errorMessage}',
+            );
+          } else if (state is TaskLoaded) {
+            SuccessMessage.show(
+              context,
+              'Your task was saved!',
+            );
+          }
+        },
+        builder: (context, state) {
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: () async {
+                  child: Text(
+                    taskToEdit != null ? 'Edit Task' : 'Add Task',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Title textfield
+                CustomTextField(
+                  controller: titleController,
+                  labelText: 'Title*',
+                  prefixIcon: LineAwesomeIcons.tasks_solid,
+                  focusNode: _titleFocusNode,
+                  keyboardType: TextInputType.text,
+                  isLoading: state is TaskLoading,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "What's the task's title?";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 15),
+                // Description textfield
+                CustomTextField(
+                  controller: descriptionController,
+                  labelText: 'Description*',
+                  prefixIcon: LineAwesomeIcons.pen_fancy_solid,
+                  focusNode: _descriptionFocusNode,
+                  keyboardType: TextInputType.text,
+                  isLoading: state is TaskLoading,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "What's the task's description?";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                // start date
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                  ),
+                  child: CustomContainer(
+                    onTap: () async {
                       final selectedDate = await showDatePicker(
                         context: context,
                         initialDate: startDate ?? DateTime.now(),
@@ -154,22 +263,21 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         setState(() => startDate = selectedDate);
                       }
                     },
+                    title: 'Start date*',
+                    displayText: startDate == null
+                        ? 'Select start date'
+                        : startDate!.toString().split(' ')[0],
                   ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      dueDate == null
-                          ? 'Select Due Date*'
-                          : 'Due: ${dueDate!.toString().split(' ')[0]}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+                ),
+                // Due date
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 20,
+                    right: 20,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: () async {
+                  child: CustomContainer(
+                    onTap: () async {
                       final selectedDate = await showDatePicker(
                         context: context,
                         initialDate: dueDate ?? DateTime.now(),
@@ -180,70 +288,241 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         setState(() => dueDate = selectedDate);
                       }
                     },
+                    title: 'Due date*',
+                    displayText: dueDate == null
+                        ? 'Select Due Date*'
+                        : dueDate!.toString().split(' ')[0],
                   ),
-                ],
-              ),
-              DropdownButton<String>(
-                value: priority,
-                items: ['low', 'medium', 'high']
-                    .map((p) => DropdownMenuItem(value: p, child: Text(p)))
-                    .toList(),
-                onChanged: (value) => setState(() => priority = value!),
-              ),
-              CheckboxListTile(
-                title: const Text('Mark as Done'),
-                value: isDone,
-                onChanged: (value) => setState(() => isDone = value!),
-              ),
-              const Divider(),
-              const Text(
-                'Subtasks',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              ...subtasks.asMap().entries.map((entry) {
-                final index = entry.key;
-                final subtask = entry.value;
-                return ListTile(
-                  title: TextField(
-                    controller: TextEditingController(text: subtask.title),
-                    decoration:
-                        const InputDecoration(hintText: 'Subtask Title'),
-                    onChanged: (value) {
-                      setState(() {
-                        subtasks[index] = subtask.copyWith(title: value);
-                      });
-                    },
-                  ),
-                  trailing: Checkbox(
-                    value: subtask.isDone,
-                    onChanged: (value) {
-                      setState(() {
-                        subtasks[index] =
-                            subtask.copyWith(isDone: value ?? false);
-                      });
-                    },
-                  ),
-                );
-              }),
-              TextButton(
-                onPressed: _addSubtask,
-                child: const Text(
-                  'Add Subtask',
-                  style: TextStyle(color: AppColors.primary),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveTask,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.white,
+                // Priority
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 20,
+                    right: 20,
+                  ),
+                  child: CustomContainer(
+                    onTap: () async => showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => CustomBottomSheet(
+                        body: PrioritySelector(
+                          selectedPriority: priority,
+                          onPrioritySelected: (value) =>
+                              setState(() => priority = value),
+                        ),
+                        scaleFactor: .6,
+                        title: 'Priority',
+                      ),
+                    ),
+                    title: 'Priority*',
+                    displayText: priority,
+                  ),
                 ),
-                child: const Text('Save'),
-              ),
-            ],
-          ),
-        ),
+                // Complete or pending toggle
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 20,
+                    right: 20,
+                  ),
+                  child: SelectionTile(
+                    onTap: () {
+                      setState(() => isDone = !isDone);
+                    },
+                    icon: Icon(
+                      !isDone ? Icons.circle_outlined : Icons.check_circle,
+                      color: AppColors.primary,
+                    ),
+                    customIcon: CustomToggle(
+                      value: isDone,
+                      onTap: () {
+                        setState(() => isDone = !isDone);
+                      },
+                    ),
+                    title: Text(
+                      'Complete task',
+                      style: TextStyle(
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    showCustomIcon: true,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Divider(
+                    thickness: 0.2,
+                    color: isDarkTheme
+                        ? AppColors.white.withValues(
+                            alpha: 0.3,
+                          )
+                        : AppColors.greyDark.withValues(
+                            alpha: 0.3,
+                          ),
+                  ),
+                ),
+                if (subtasks.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: Text(
+                      'Subtasks',
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                  ),
+                if (subtasks.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      top: 10,
+                      right: 20,
+                      bottom: 20,
+                    ),
+                    child: Text(
+                      'Click the toggle to complete a subtask',
+                      style: TextStyle(
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                // subtasks list
+                if (subtasks.isNotEmpty)
+                  ...subtasks.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final subtask = entry.value;
+                    // Ensure controller and focus node exist
+                    if (!subtaskControllers.containsKey(subtask.id)) {
+                      subtaskControllers[subtask.id] =
+                          TextEditingController(text: subtask.title);
+                    }
+                    if (!subtaskFocusNodes.containsKey(subtask.id)) {
+                      subtaskFocusNodes[subtask.id] = FocusNode()
+                        ..addListener(_onFocusChange);
+                    }
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: CustomTextField(
+                        controller: subtaskControllers[subtask.id]!,
+                        labelText: 'Title*',
+                        prefixIcon: LineAwesomeIcons.tasks_solid,
+                        focusNode: subtaskFocusNodes[subtask.id]!,
+                        keyboardType: TextInputType.text,
+                        isLoading: state is TaskLoading,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "What's the subtask's title?";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            subtasks[index] = subtask.copyWith(title: value);
+                          });
+                          return '';
+                        },
+                      ),
+                      trailing: Padding(
+                        padding: const EdgeInsets.only(
+                          right: 20,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: CustomToggle(
+                                onTap: () {
+                                  setState(() {
+                                    subtasks[index] = subtask.copyWith(
+                                      isDone: !subtask.isDone,
+                                    );
+                                  });
+                                },
+                                value: subtask.isDone,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete_outline_rounded,
+                                color: AppColors.error,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  // Dispose controller and focus node
+                                  subtaskControllers[subtask.id]?.dispose();
+                                  subtaskFocusNodes[subtask.id]
+                                      ?.removeListener(_onFocusChange);
+                                  subtaskFocusNodes[subtask.id]?.dispose();
+                                  subtaskControllers.remove(subtask.id);
+                                  subtaskFocusNodes.remove(subtask.id);
+                                  // Remove subtask from list
+                                  subtasks.removeAt(index);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                // Add subtask button
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 20,
+                    right: 20,
+                  ),
+                  child: CustomOutlineButton(
+                    onPressed: _addSubtask,
+                    isLoading: state is TaskLoading,
+                    buttonColor: AppColors.success,
+                    useButtonColor: true,
+                    buttonText: 'Add Subtask',
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // save button
+                CustomButton(
+                  onPressed: _saveTask,
+                  buttonText: 'Save',
+                  isLoading: state is TaskLoading,
+                ),
+                const SizedBox(height: 15),
+                // Credits section
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Powered by',
+                      style: TextStyle(
+                        color: AppColors.greyDark,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Image.asset(
+                      AssetsPath.taskifyLogo,
+                      height: 30,
+                      width: 30,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

@@ -73,17 +73,16 @@ class _TasksScreenState extends State<TasksScreen> {
         },
         builder: (context, state) {
           if (state is TaskLoading) {
-            return const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: CircularProgressIndicator(
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
                     color: AppColors.primary,
                     strokeWidth: 2,
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           }
 
