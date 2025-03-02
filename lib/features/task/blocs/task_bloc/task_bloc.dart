@@ -33,6 +33,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       final user = hiveHelper.retrieveUserProfile();
       if (user != null) {
         _allTasks = await taskFirebase.getTasks(user.uid);
+        // Clear and persist to Hive
+        await hiveHelper.clearTasksBox();
+        for (final task in _allTasks) {
+          await hiveHelper.saveTask(task: task);
+        }
       } else {
         _allTasks = await hiveHelper.getTasks();
       }
@@ -54,6 +59,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       );
       await taskFirebase.saveTask(task);
       _allTasks = await taskFirebase.getTasks(user.uid);
+      // Clear and persist to Hive
+      await hiveHelper.clearTasksBox();
+      for (final task in _allTasks) {
+        await hiveHelper.saveTask(task: task);
+      }
       emit(TaskLoaded(_allTasks));
     } catch (e) {
       emit(TaskFailure(e.toString()));
@@ -67,6 +77,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       final user = hiveHelper.retrieveUserProfile();
       if (user != null) {
         _allTasks = await taskFirebase.getTasks(user.uid);
+        // Clear and persist to Hive
+        await hiveHelper.clearTasksBox();
+        for (final task in _allTasks) {
+          await hiveHelper.saveTask(task: task);
+        }
       } else {
         _allTasks = await hiveHelper.getTasks();
       }
@@ -83,6 +98,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       final user = hiveHelper.retrieveUserProfile();
       if (user != null) {
         _allTasks = await taskFirebase.getTasks(user.uid);
+        // Clear and persist to Hive
+        await hiveHelper.clearTasksBox();
+        for (final task in _allTasks) {
+          await hiveHelper.saveTask(task: task);
+        }
       } else {
         _allTasks = await hiveHelper.getTasks();
       }

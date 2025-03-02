@@ -13,6 +13,7 @@ import 'package:taskify/features/auth/blocs/register_bloc/register_bloc.dart';
 import 'package:taskify/features/auth/blocs/reset_pwd_bloc/reset_pwd_bloc.dart';
 import 'package:taskify/features/profile/blocs/logout_bloc/logout_bloc.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
+import 'package:taskify/features/task/blocs/task_bloc/task_bloc.dart';
 import 'package:taskify/firebase_options.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -90,6 +91,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
           create: (context) => getIt<ThemeBloc>(),
         ),
         // Task Bloc
+        BlocProvider<TaskBloc>(
+          create: (context) => TaskBloc(),
+        ),
       ],
       child: await builder(),
     ),

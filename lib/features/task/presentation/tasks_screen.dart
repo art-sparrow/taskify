@@ -9,6 +9,7 @@ import 'package:taskify/core/utils/router.dart';
 import 'package:taskify/core/widgets/error_message.dart';
 import 'package:taskify/features/auth/data/models/register_hive.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_bloc.dart';
+import 'package:taskify/features/task/blocs/task_bloc/task_event.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_state.dart';
 import 'package:taskify/features/task/data/models/task_hive.dart';
 
@@ -41,9 +42,14 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   Future<void> _fetchTasks() async {
-    // Fetch from storage if not empty
-
-    // Fetch from Firestore
+    // Fetch from local storage first
+    localTasks = await getIt<HiveHelper>().getTasks();
+    // Fetch from Firestore if localTasks is empty
+    if (localTasks.isEmpty) {
+      if (mounted) {
+        context.read<TaskBloc>().add(LoadTasks());
+      }
+    }
   }
 
   @override
@@ -61,7 +67,9 @@ class _TasksScreenState extends State<TasksScreen> {
           if (state is TaskFailure) {
             ErrorMessage.show(context, state.errorMessage);
           }
-          if (state is TaskLoaded) {}
+          if (state is TaskLoaded) {
+            localTasks = state.tasks;
+          }
         },
         builder: (context, state) {
           if (state is TaskLoading) {
@@ -79,12 +87,10 @@ class _TasksScreenState extends State<TasksScreen> {
             );
           }
 
+          final tasks = state is TaskLoaded ? state.tasks : localTasks;
+
           return Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              top: 40,
-              right: 20,
-            ),
+            padding: const EdgeInsets.only(left: 20, top: 40, right: 20),
             child: Column(
               children: [
                 Row(
@@ -99,11 +105,13 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        /* await Navigator.pushNamed(
+                        await Navigator.pushNamed(
                           context,
-                          TaskifyRouter.createTaskScreenRoute,
-                          arguments: user,
-                        ); */
+                          TaskifyRouter.taskDetailsScreenRoute,
+                          arguments: {
+                            'task': null,
+                          },
+                        );
                       },
                       child: const Text(
                         'Add tasks',
@@ -115,7 +123,79 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
                 // Tasks list view
+                Flexible(
+                  child: tasks.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No tasks yet - add one!',
+                            style: TextStyle(
+                              color: AppColors.greyDark,
+                              fontSize: 14,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            final task = tasks[index];
+                            return ListTile(
+                              title: Text(
+                                task.title,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      color: task.isDone
+                                          ? AppColors.greyDark
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                      decoration: task.isDone
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                    ),
+                              ),
+                              subtitle: Text(
+                                'Due: ${task.dueDate.toString().split(' ')[0]}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              leading: Checkbox(
+                                value: task.isDone,
+                                onChanged: (value) {
+                                  final updatedTask =
+                                      task.copyWith(isDone: value ?? false);
+                                  context
+                                      .read<TaskBloc>()
+                                      .add(UpdateTask(updatedTask));
+                                },
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: AppColors.error,
+                                ),
+                                onPressed: () => context.read<TaskBloc>().add(
+                                      DeleteTask(
+                                        task.taskId,
+                                      ),
+                                    ),
+                              ),
+                              onTap: () async {
+                                await Navigator.pushNamed(
+                                  context,
+                                  TaskifyRouter.taskDetailsScreenRoute,
+                                  arguments: {
+                                    'task': task,
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
+                ),
               ],
             ),
           );

@@ -23,6 +23,7 @@ abstract class HiveHelper {
 
   // Clear
   Future<void> clearHiveDB();
+  Future<void> clearTasksBox();
 }
 
 class HiveHelperImplementation implements HiveHelper {
@@ -50,6 +51,11 @@ class HiveHelperImplementation implements HiveHelper {
   Future<void> clearHiveDB() async {
     await Hive.box<dynamic>('taskify_dev').clear();
     await Hive.box<RegistrationEntity>('user_box').clear();
+    await Hive.box<Task>('tasks_box').clear();
+  }
+
+  @override
+  Future<void> clearTasksBox() async {
     await Hive.box<Task>('tasks_box').clear();
   }
 

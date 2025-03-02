@@ -113,6 +113,18 @@ class Subtask extends Equatable {
   @HiveField(2)
   final bool isDone;
 
+  Subtask copyWith({
+    int? id,
+    String? title,
+    bool? isDone,
+  }) {
+    return Subtask(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      isDone: isDone ?? this.isDone,
+    );
+  }
+
   @override
   List<Object?> get props => [id, title, isDone];
 }
