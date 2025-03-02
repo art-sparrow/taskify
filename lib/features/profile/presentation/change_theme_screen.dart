@@ -93,6 +93,7 @@ class _ChangeThemeScreenState extends State<ChangeThemeScreen> {
                         color:
                             isDarkTheme ? AppColors.white : AppColors.greyDark,
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     showCustomIcon: true,
