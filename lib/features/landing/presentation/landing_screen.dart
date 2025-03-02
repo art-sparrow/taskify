@@ -5,6 +5,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:taskify/core/utils/app_colors.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 import 'package:taskify/features/profile/presentation/profile_screen.dart';
+import 'package:taskify/features/task/presentation/tasks_screen.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
@@ -18,7 +19,7 @@ class _LandingScreenState extends State<LandingScreen> {
     // Dashboard
     const ProfileScreen(),
     // Tasks
-    const ProfileScreen(),
+    const TasksScreen(),
     // Profile
     const ProfileScreen(),
   ];
