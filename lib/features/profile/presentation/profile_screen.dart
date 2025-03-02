@@ -19,6 +19,7 @@ import 'package:taskify/features/profile/blocs/logout_bloc/logout_event.dart';
 import 'package:taskify/features/profile/blocs/logout_bloc/logout_state.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_bloc.dart';
+import 'package:taskify/features/task/blocs/task_bloc/task_event.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_state.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -209,9 +210,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onTap: state is TaskLoading
                                   ? () {}
                                   : () {
-                                      // Fetch all Tasks with `synced: false`
-                                      // and sync them to Firestore
-                                      // Then refresh the local tasks
+                                      // Sync all tasks with 'synced: false'
+                                      context.read<TaskBloc>().add(SyncTasks());
                                     },
                             );
                           },

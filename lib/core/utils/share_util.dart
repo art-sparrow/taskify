@@ -22,7 +22,7 @@ Future<void> shareUrl(String url) async {
     logger.e('Something went wrong: $e');
     return;
   }
-  logger.e('Shared successfully');
+  logger.i('Shared successfully');
 }
 
 Future<void> launchExternalLink(Uri url) async {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/core/helpers/hive_helper.dart';
 import 'package:taskify/core/helpers/service_locator.dart';
+import 'package:taskify/core/services/internet_service.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_event.dart';
 import 'package:taskify/features/task/blocs/task_bloc/task_state.dart';
 import 'package:taskify/features/task/data/datasources/task_firebase.dart';
@@ -21,6 +22,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<DeleteTask>(_onDeleteTask);
     on<SearchTasks>(_onSearchTasks);
     on<FilterTasks>(_onFilterTasks);
+    on<SyncTasks>(_onSyncTasks);
   }
 
   final TaskFirebase taskFirebase;
@@ -210,6 +212,49 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             ),
       );
       emit(TaskLoaded(filteredTasks));
+    } catch (e) {
+      emit(TaskFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onSyncTasks(
+    SyncTasks event,
+    Emitter<TaskState> emit,
+  ) async {
+    emit(TaskLoading());
+    try {
+      // Fetch tasks with synced: false from Hive
+      final unsyncedTasks = await hiveHelper.getTasks();
+      final tasksToSync = unsyncedTasks.where((task) => !task.synced).toList();
+
+      if (tasksToSync.isNotEmpty) {
+        // Sync each task to Firestore
+        for (final task in tasksToSync) {
+          // Update the task in Firestore
+          await taskFirebase.saveTask(task);
+        }
+      }
+
+      // Check internet connectivity
+      final hasInternet = await InternetService.check();
+
+      // Refresh the task list
+      final user = hiveHelper.retrieveUserProfile();
+      if (hasInternet) {
+        if (user != null) {
+          _allTasks = await taskFirebase.getTasks(user.uid);
+          // Clear and persist to Hive
+          await hiveHelper.clearTasksBox();
+          for (final task in _allTasks) {
+            await hiveHelper.saveTask(task: task);
+          }
+        } else {
+          _allTasks = await hiveHelper.getTasks();
+        }
+      } else {
+        _allTasks = await hiveHelper.getTasks();
+      }
+      emit(TaskLoaded(_allTasks));
     } catch (e) {
       emit(TaskFailure(e.toString()));
     }

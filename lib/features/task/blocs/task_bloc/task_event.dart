@@ -57,3 +57,5 @@ class FilterTasks extends TaskEvent {
   List<Object?> get props =>
       [priority ?? '', isDone ?? false, dueDate ?? DateTime.now()];
 }
+
+class SyncTasks extends TaskEvent {}
