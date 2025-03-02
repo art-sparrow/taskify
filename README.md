@@ -33,6 +33,42 @@ $ flutter run --flavor production --target lib/main_production.dart
 
 _\*Taskify works on iOS, Android, Web, and Windows._
 
+## Setup Instructions
+1. **Clone the Repository**: `git clone https://github.com/art-sparrow/taskify.git`
+2. **Install Dependencies**: Run `flutter pub get`. You may also re-generate `.g` files with `make gen` - see `Makefile`.
+3. **Firebase Setup**:
+   - Set up a Firebase project and enable Authentication (Email/Password, Google Sign-In) and Firestore.
+   - Add `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) to respective directories.
+   - Enable Hive: Add Hive initialization in `main.dart`.
+4. **Run the App**:
+   - Pick a flavor and test: `flutter run --flavor production --target lib/main_production.dart`
+
+*Note: Ensure you have Flutter 3.29 and Dart SDK installed.*
+
+---
+
+## Features
+- **User Authentication**: Email/password login, registration, and logout using Firebase Authentication with Google Sign-In support.
+- **Task Management**: Add, edit, delete tasks with title, description, due date, priority, completion status, and subtasks. Local storage with Hive and cloud sync with Firestore.
+- **Search, Filter, Sort**: Search tasks by title, filter by priority/completion/due date, sort by various criteria (e.g., A-Z, priority).
+- **Calendar View**: Dashboard with a calendar highlighting task due dates, showing up to 3 tasks per selected date.
+- **Dark Mode Toggle**: Switch between light and dark themes with persistence using Hive.
+- **Sync Feature**: Manual sync for unsynced tasks (`synced: false`) to Firestore, with internet-aware logic.
+- **Share Tasks/App**: Share a tasks/app via `share_plus` for app promotion/collaboration.
+- **Responsive UI**: Clean, intuitive design with custom widgets (e.g., `CustomTextField`, `CustomBottomSheet`).
+
+---
+
+## Architecture and Tech Stack
+- **State Management**: Used `flutter_bloc` for managing app state (e.g., `TaskBloc`, `ThemeBloc`)—ensures reactive updates and separation of concerns.
+- **Data Storage**: 
+  - Local: Hive for offline persistence.
+  - Cloud: Firebase `Firestore` for synchronization with `synced` flag to track sync status.
+- **Networking**: Integrated `internet_connection_checker_plus` to handle offline scenarios.
+- **Navigation**: Custom `TaskifyRouter` with `page_transition` for smooth screen transitions.
+- **Custom Widgets**: Built reusable widgets (e.g., `MenuOption`, `CustomToggle`) for consistent UI.
+- **Dependencies**: `share_plus`, `url_launcher`, `line_awesome_flutter`, and more—see `pubspec.yaml` for full list.
+
 ---
 
 ## Flutter Doctor
