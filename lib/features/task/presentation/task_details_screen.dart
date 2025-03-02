@@ -156,6 +156,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     });
   }
 
+  String _capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Set the status bar color to transparent
@@ -316,7 +321,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       ),
                     ),
                     title: 'Priority*',
-                    displayText: priority,
+                    displayText: _capitalize(priority),
                   ),
                 ),
                 // Complete or pending toggle

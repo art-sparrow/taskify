@@ -15,6 +15,11 @@ class PrioritySelector extends StatelessWidget {
   final String selectedPriority;
   final ValueChanged<String> onPrioritySelected;
 
+  String _capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     final priorities = ['low', 'medium', 'high'];
@@ -40,7 +45,7 @@ class PrioritySelector extends StatelessWidget {
               },
             ),
             title: Text(
-              p,
+              _capitalize(p),
               style: TextStyle(
                 color:
                     isDarkTheme(context) ? AppColors.white : AppColors.greyDark,
