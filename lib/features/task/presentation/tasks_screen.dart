@@ -259,9 +259,13 @@ class _TasksScreenState extends State<TasksScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircularProgressIndicator(
-                          color: AppColors.primary,
-                          strokeWidth: 2,
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: AppColors.primary,
+                            strokeWidth: 2,
+                          ),
                         ),
                       ],
                     ),

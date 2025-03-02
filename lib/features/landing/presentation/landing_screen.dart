@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:taskify/core/utils/app_colors.dart';
+import 'package:taskify/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
 import 'package:taskify/features/profile/presentation/profile_screen.dart';
 import 'package:taskify/features/task/presentation/tasks_screen.dart';
@@ -17,7 +18,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   List<Widget> pages = [
     // Dashboard
-    const ProfileScreen(),
+    const DashboardScreen(),
     // Tasks
     const TasksScreen(),
     // Profile
