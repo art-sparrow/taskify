@@ -89,7 +89,11 @@ class _ChangeThemeScreenState extends State<ChangeThemeScreen> {
                     ),
                     title: Text(
                       'Light mode',
-                      style: state.themeData.textTheme.titleMedium,
+                      style: TextStyle(
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                        fontSize: 16,
+                      ),
                     ),
                     showCustomIcon: true,
                   ),
@@ -126,7 +130,12 @@ class _ChangeThemeScreenState extends State<ChangeThemeScreen> {
                     ),
                     title: Text(
                       'Dark mode',
-                      style: state.themeData.textTheme.titleMedium,
+                      style: TextStyle(
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     showCustomIcon: true,
                   ),
@@ -164,7 +173,12 @@ class _ChangeThemeScreenState extends State<ChangeThemeScreen> {
                     ),
                     title: Text(
                       'Device theme',
-                      style: state.themeData.textTheme.titleMedium,
+                      style: TextStyle(
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     showCustomIcon: true,
                   ),

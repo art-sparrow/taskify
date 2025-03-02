@@ -85,9 +85,11 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         BlocProvider<ResetPwdBloc>(
           create: (context) => ResetPwdBloc(),
         ),
+        // Theme Bloc
         BlocProvider<ThemeBloc>(
-          create: (_) => getIt<ThemeBloc>(),
+          create: (context) => getIt<ThemeBloc>(),
         ),
+        // Task Bloc
       ],
       child: await builder(),
     ),

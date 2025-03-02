@@ -54,6 +54,9 @@ class _NotificationSettingsScreenState
       ),
       body: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
+          // Determine current theme states
+          final isDarkTheme = state.themeData.brightness == Brightness.dark;
+
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Padding(
@@ -107,7 +110,12 @@ class _NotificationSettingsScreenState
                     ),
                     title: Text(
                       'Enable',
-                      style: state.themeData.textTheme.titleMedium,
+                      style: TextStyle(
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     showCustomIcon: true,
                   ),
@@ -145,7 +153,12 @@ class _NotificationSettingsScreenState
                     ),
                     title: Text(
                       'Disable',
-                      style: state.themeData.textTheme.titleMedium,
+                      style: TextStyle(
+                        color:
+                            isDarkTheme ? AppColors.white : AppColors.greyDark,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     showCustomIcon: true,
                   ),
