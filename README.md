@@ -99,6 +99,9 @@ The `prod` and `dev` workflows will generate this CI/CD app testing invitation o
 
 ![Image](https://github.com/user-attachments/assets/bc11e835-34c4-42f6-b0f8-caf8986882ea)
 
+To test the current release version `1.0.0+106` click this link to download the app - [APK](https://drive.google.com/file/d/1BPtu7u0wt0gzX5_f5dkMB3Ntc_5qMFjk/view?usp=drive_link)
+
+
 ---
 
 ## Running Tests 🧪
