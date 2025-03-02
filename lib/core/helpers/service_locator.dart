@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskify/core/helpers/hive_helper.dart';
+import 'package:taskify/core/services/internet_service.dart';
 import 'package:taskify/features/auth/data/datasources/auth_firebase.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
+import 'package:taskify/features/task/data/datasources/task_firebase.dart';
 
 final getIt = GetIt.instance;
 
@@ -27,5 +29,9 @@ Future<void> setupLocator() async {
     // Themes
     ..registerSingleton<ThemeBloc>(
       ThemeBloc(sharedPreferences: getIt<SharedPreferences>()),
-    );
+    )
+    // InternetService
+    ..registerSingleton<InternetService>(InternetService())
+    // TaskFirebase
+    ..registerSingleton<TaskFirebase>(TaskFirebase());
 }
