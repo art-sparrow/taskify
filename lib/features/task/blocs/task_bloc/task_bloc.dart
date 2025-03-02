@@ -142,20 +142,51 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   ) async {
     emit(TaskLoading());
     try {
-      var filteredTasks = _allTasks;
+      var filteredTasks = List<Task>.from(_allTasks);
+      // Apply filters
       if (event.priority != null) {
         filteredTasks = filteredTasks
-            .where((task) => task.priority == event.priority)
+            .where(
+              (task) => task.priority == event.priority,
+            )
             .toList();
+        // Sort by priority if specified
+        const priorityOrderAsc = {'low': 1, 'medium': 2, 'high': 3};
+        const priorityOrderDesc = {'low': 3, 'medium': 2, 'high': 1};
+        if (event.priority == 'ascending') {
+          filteredTasks.sort(
+            (a, b) => priorityOrderAsc[a.priority]!.compareTo(
+              priorityOrderAsc[b.priority]!,
+            ),
+          );
+        } else if (event.priority == 'descending') {
+          filteredTasks.sort(
+            (a, b) => priorityOrderDesc[a.priority]!.compareTo(
+              priorityOrderDesc[b.priority]!,
+            ),
+          );
+        }
       }
       if (event.isDone != null) {
-        filteredTasks =
-            filteredTasks.where((task) => task.isDone == event.isDone).toList();
+        filteredTasks = filteredTasks
+            .where(
+              (task) => task.isDone == event.isDone,
+            )
+            .toList();
+        // Sort by isDone (true/false)
+        if (event.isDone! == true) {
+          filteredTasks.sort((a, b) => b.isDone ? 1 : -1);
+        } else {
+          filteredTasks.sort((a, b) => a.isDone ? 1 : -1);
+        }
       }
       if (event.dueDate != null) {
         filteredTasks = filteredTasks.where((task) {
-          final dueDate =
-              DateTime(task.dueDate.year, task.dueDate.month, task.dueDate.day);
+          final dueDate = DateTime(
+            task.dueDate.year,
+            task.dueDate.month,
+            task.dueDate.day,
+          );
           final filterDate = DateTime(
             event.dueDate!.year,
             event.dueDate!.month,
@@ -163,7 +194,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           );
           return dueDate == filterDate;
         }).toList();
+        // Sort by dueDate
+        if (event.dueDate == DateTime(1970)) {
+          // Placeholder for ascending
+          filteredTasks.sort((a, b) => a.dueDate.compareTo(b.dueDate));
+        } else if (event.dueDate == DateTime(1971)) {
+          // Placeholder for descending
+          filteredTasks.sort((a, b) => b.dueDate.compareTo(a.dueDate));
+        }
       }
+      // Always sort A-Z as default after filters
+      filteredTasks.sort(
+        (a, b) => a.title.toLowerCase().compareTo(
+              b.title.toLowerCase(),
+            ),
+      );
       emit(TaskLoaded(filteredTasks));
     } catch (e) {
       emit(TaskFailure(e.toString()));
