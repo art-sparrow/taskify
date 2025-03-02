@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:taskify/core/constants/assets_path.dart';
 import 'package:taskify/core/utils/app_colors.dart';
+import 'package:taskify/core/utils/share_util.dart';
 import 'package:taskify/core/widgets/custom_bottom_sheet.dart';
 import 'package:taskify/core/widgets/custom_button.dart';
 import 'package:taskify/core/widgets/custom_container.dart';
@@ -183,6 +184,20 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             LineAwesomeIcons.angle_left_solid,
           ),
         ),
+        actions: [
+          if (taskToEdit != null)
+            IconButton(
+              onPressed: () {
+                shareUrl(
+                  'Check out my next task - ${taskToEdit?.title} (${taskToEdit?.description}). Try Taskify to manage your tasks with ease.',
+                );
+              },
+              icon: Icon(
+                Icons.share_outlined,
+                color: isDarkTheme ? AppColors.white : AppColors.greyDark,
+              ),
+            ),
+        ],
       ),
       body: BlocConsumer<TaskBloc, TaskState>(
         listener: (context, state) {

@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +10,7 @@ import 'package:taskify/core/helpers/hive_helper.dart';
 import 'package:taskify/core/helpers/service_locator.dart';
 import 'package:taskify/core/utils/app_colors.dart';
 import 'package:taskify/core/utils/router.dart';
+import 'package:taskify/core/utils/share_util.dart';
 import 'package:taskify/core/widgets/error_message.dart';
 import 'package:taskify/core/widgets/menu_option.dart';
 import 'package:taskify/features/auth/data/models/register_hive.dart';
@@ -15,6 +18,8 @@ import 'package:taskify/features/profile/blocs/logout_bloc/logout_bloc.dart';
 import 'package:taskify/features/profile/blocs/logout_bloc/logout_event.dart';
 import 'package:taskify/features/profile/blocs/logout_bloc/logout_state.dart';
 import 'package:taskify/features/profile/blocs/theme_bloc/theme_bloc.dart';
+import 'package:taskify/features/task/blocs/task_bloc/task_bloc.dart';
+import 'package:taskify/features/task/blocs/task_bloc/task_state.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -178,6 +183,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     TaskifyRouter.notificationsScreenRoute,
                                   );
                                 },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        //Sync
+                        BlocBuilder<TaskBloc, TaskState>(
+                          builder: (context, state) {
+                            return MenuOption(
+                              title: 'Sync data',
+                              leadingIcon: Icon(
+                                LineAwesomeIcons.cloud_upload_alt_solid,
+                                color: isDarkTheme
+                                    ? AppColors.white
+                                    : AppColors.greyDark,
+                              ),
+                              trailingIcon: Icon(
+                                LineAwesomeIcons.angle_right_solid,
+                                color: isDarkTheme
+                                    ? AppColors.white
+                                    : AppColors.greyDark,
+                              ),
+                              trailing: false,
+                              isLoading: state is TaskLoading,
+                              onTap: state is TaskLoading
+                                  ? () {}
+                                  : () {
+                                      // Fetch all Tasks with `synced: false`
+                                      // and sync them to Firestore
+                                      // Then refresh the local tasks
+                                    },
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        //share
+                        MenuOption(
+                          title: 'Share app',
+                          leadingIcon: Icon(
+                            Icons.share_outlined,
+                            color: isDarkTheme
+                                ? AppColors.white
+                                : AppColors.greyDark,
+                          ),
+                          trailingIcon: Icon(
+                            LineAwesomeIcons.angle_right_solid,
+                            color: isDarkTheme
+                                ? AppColors.white
+                                : AppColors.greyDark,
+                          ),
+                          trailing: false,
+                          onTap: state is LogoutLoading
+                              ? () {}
+                              : () => shareUrl(
+                                    'Try Taskify to manage your tasks with ease.',
+                                  ),
                         ),
                         const SizedBox(
                           height: 20,

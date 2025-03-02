@@ -291,133 +291,142 @@ class _TasksScreenState extends State<TasksScreen> {
                           itemCount: tasks.length,
                           itemBuilder: (context, index) {
                             final task = tasks[index];
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 10,
-                                    right: 10,
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor:
-                                        AppColors.primary.withValues(
-                                      alpha: 0.2,
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 10,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10,
+                                      right: 10,
                                     ),
-                                    child: Text(
-                                      task.title.substring(0, 1),
-                                      style: const TextStyle(
-                                        color: AppColors.primary,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                    child: CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor:
+                                          AppColors.primary.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                      child: Text(
+                                        task.title.substring(0, 1),
+                                        style: const TextStyle(
+                                          color: AppColors.primary,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // Task name, due date, and status
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: 90,
-                                          child: Text(
-                                            task.title,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.copyWith(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                            maxLines: 1,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Due: ${task.dueDate.toString().split(' ')[0]}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                        Container(
-                                          height: 20,
-                                          width: 80,
-                                          margin: const EdgeInsets.only(
-                                            top: 4,
-                                          ),
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: task.isDone
-                                                ? AppColors.success.withValues(
-                                                    alpha: 0.2,
-                                                  )
-                                                : AppColors.warning.withValues(
-                                                    alpha: 0.2,
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      // Task name, due date, and status
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 90,
+                                            child: Text(
+                                              task.title,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(15),
+                                              maxLines: 1,
                                             ),
                                           ),
-                                          child: Text(
-                                            task.isDone
-                                                ? 'Complete'
-                                                : 'Pending',
+                                          Text(
+                                            'Due: ${task.dueDate.toString().split(' ')[0]}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodySmall
-                                                ?.copyWith(
-                                                  color: task.isDone
-                                                      ? AppColors.success
-                                                      : AppColors.warning,
-                                                ),
+                                                .bodySmall,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    // delete task
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 60,
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete_outline_rounded,
-                                          color: AppColors.error,
-                                        ),
-                                        onPressed: () =>
-                                            context.read<TaskBloc>().add(
-                                                  DeleteTask(
-                                                    task.taskId,
+                                          Container(
+                                            height: 20,
+                                            width: 80,
+                                            margin: const EdgeInsets.only(
+                                              top: 4,
+                                            ),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: task.isDone
+                                                  ? AppColors.success
+                                                      .withValues(
+                                                      alpha: 0.2,
+                                                    )
+                                                  : AppColors.warning
+                                                      .withValues(
+                                                      alpha: 0.2,
+                                                    ),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(15),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              task.isDone
+                                                  ? 'Complete'
+                                                  : 'Pending',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                    color: task.isDone
+                                                        ? AppColors.success
+                                                        : AppColors.warning,
                                                   ),
-                                                ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    // edit task
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.edit_outlined,
-                                        color: AppColors.success,
+                                      // delete task
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 60,
+                                        ),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.delete_outline_rounded,
+                                            color: AppColors.error,
+                                          ),
+                                          onPressed: () =>
+                                              context.read<TaskBloc>().add(
+                                                    DeleteTask(
+                                                      task.taskId,
+                                                    ),
+                                                  ),
+                                        ),
                                       ),
-                                      onPressed: () async {
-                                        await Navigator.pushNamed(
-                                          context,
-                                          TaskifyRouter.taskDetailsScreenRoute,
-                                          arguments: {
-                                            'task': task,
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      // edit task
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.edit_outlined,
+                                          color: AppColors.success,
+                                        ),
+                                        onPressed: () async {
+                                          await Navigator.pushNamed(
+                                            context,
+                                            TaskifyRouter
+                                                .taskDetailsScreenRoute,
+                                            arguments: {
+                                              'task': task,
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
