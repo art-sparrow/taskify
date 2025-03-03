@@ -55,7 +55,7 @@ _\*Taskify works on iOS, Android, Web, and Windows._
 - **Calendar View**: Dashboard with a calendar highlighting task due dates, showing up to 3 tasks per selected date.
 - **Dark Mode Toggle**: Switch between light and dark themes with persistence using Hive.
 - **Sync Feature**: Manual sync for unsynced tasks (`synced: false`) to Firestore, with internet-aware logic.
-- **Share Tasks/App**: Share a tasks/app via `share_plus` for app promotion/collaboration.
+- **Share Tasks/App**: Share a task/app via `share_plus` for app promotion/collaboration.
 - **Responsive UI**: Clean, intuitive design with custom widgets (e.g., `CustomTextField`, `CustomBottomSheet`).
 
 ---
