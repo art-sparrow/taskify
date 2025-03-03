@@ -1,6 +1,7 @@
 # Taskify
 
 ![Image](https://github.com/user-attachments/assets/8e84a217-0f04-4f17-83c2-f702f2aa1c3f)
+![Image](https://github.com/user-attachments/assets/9cce4f43-2345-45cf-b1e9-42d98a20c33c)
 
 ![coverage][coverage_badge]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
